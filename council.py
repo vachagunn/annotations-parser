@@ -3,7 +3,8 @@ import requests
 import os
 import re
 
-PAGE_COUNT = 3
+PAGE_COUNT = 38
+# После 38 страницы аннотаций нет
 
 folder_path = 'downloads'
 
@@ -15,7 +16,7 @@ def save_annotations(page_soup):
     a_elements = page_soup.find_all('a', href=regex)
 
     for a in a_elements:
-        if a.text.rstrip() == 'Аннотации к ФЗ':
+        if a.text.rstrip() == 'Аннотации к ФЗ' or "Аннотации к федеральным законам" in a.text.rstrip():
             annotation_links.append(a['href'])
 
     print(annotation_links)
@@ -33,8 +34,6 @@ def save_pdf(links):
         print(file_path)
 
         response = requests.get(link)
-        print(response)
-        print(response.content)
 
         with open(file_path, 'wb') as file:
             file.write(response.content)
